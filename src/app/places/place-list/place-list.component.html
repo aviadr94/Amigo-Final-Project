@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+
+<mat-accordion multi="true" *ngIf="places.length > 0 && !isLoading">
+
+  <mat-expansion-panel *ngFor="let place of places">
+    <mat-expansion-panel-header>
+      {{ place.name }}
+    </mat-expansion-panel-header>
+    <p>lat : {{ place.lat }}</p>
+    <p>lng : {{ place.lng }}</p>
+    <p>likes : {{ place.count_of_likes }}</p>
+
+    <div *ngIf="setMapValues(place)">
+      <agm-map [latitude]="latitude" [zoom]="zoom" [longitude]="longitude">
+          <agm-marker
+          [latitude]="place.lat"
+          [longitude]="place.lng"
+          (markerClick)="clickedMarker(infoWindow)">
+            <agm-info-window #infoWindow>
+              {{ place.name }}
+              <br>
+              <div *ngIf="userIsAuthenticated">
+              <a class="abutton" *ngIf="!checkIfUserLikeThePlace(place.id)" (click)="LikeClicked(place,infoWindow)"><i class="fa fa-thumbs-up like" aria-hidden="true"></i>  </a>
+              <a class="abutton"  *ngIf="checkIfUserLikeThePlace(place.id)" (click)="UnLikeClicked(place,infoWindow)"><i class="fa fa-thumbs-o-down unlike" aria-hidden="true"></i></a>
+            </div>
+            </agm-info-window>
+          </agm-marker>
+    </agm-map>
+  </div>
+
+    <mat-action-row *ngIf="userIsAuthenticated && userId === place.creator">
+      <a mat-button color="primary" [routerLink]="['/placeedit', place.id]">EDIT</a>
+      <button mat-button color="warn" (click)="onDelete(place.id)">DELETE</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+
+</mat-accordion>
+<mat-paginator [length]="totalPlaces" [pageSize]="placesPerPage" [pageSizeOptions]="pageSizeOptions" (page)="onChangedPage($event)"
+  *ngIf="places.length > 0"></mat-paginator>
+<p class="info-text mat-body-1" *ngIf="places.length <= 0 && !isLoading">No Places added yet!</p>

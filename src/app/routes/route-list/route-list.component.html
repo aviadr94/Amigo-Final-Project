@@ -1,0 +1,77 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+<mat-accordion multi="true" *ngIf="routes.length > 0 && !isLoading">
+  <mat-expansion-panel *ngFor="let route of routes">
+    <mat-expansion-panel-header>
+      {{ route.name }}
+    </mat-expansion-panel-header>
+    <p>Duration of the route : {{ route.time_of_route }} Hours </p>
+    <p *ngIf="route.rating == '1-Very Bad'">
+      <span class="fa fa-star checked"></span>
+      <span class="fa fa-star"></span>
+      <span class="fa fa-star"></span>
+      <span class="fa fa-star"></span>
+      <span class="fa fa-star"></span>
+    </p>
+    <p *ngIf="route.rating == '2-Bad'">
+      <span class="fa fa-star checked"></span>
+      <span class="fa fa-star checked"></span>
+      <span class="fa fa-star"></span>
+      <span class="fa fa-star"></span>
+      <span class="fa fa-star"></span>
+    </p>
+    <p *ngIf="route.rating == '3-Nice'">
+      <span class="fa fa-star checked"></span>
+      <span class="fa fa-star checked"></span>
+      <span class="fa fa-star checked"></span>
+      <span class="fa fa-star"></span>
+      <span class="fa fa-star"></span>
+    </p>
+    <p *ngIf="route.rating == '4-Very Good'">
+      <span class="fa fa-star checked"></span>
+      <span class="fa fa-star checked"></span>
+      <span class="fa fa-star checked"></span>
+      <span class="fa fa-star checked"></span>
+      <span class="fa fa-star"></span>
+    </p>
+    <p *ngIf="route.rating == '5-Excellent'">
+      <span class="fa fa-star checked"></span>
+      <span class="fa fa-star checked"></span>
+      <span class="fa fa-star checked"></span>
+      <span class="fa fa-star checked"></span>
+      <span class="fa fa-star checked"></span>
+    </p>
+
+    <div *ngIf="routePlaces(route.places)">
+      <p *ngFor="let placeData of placesListStringArray">
+        <label *ngIf="ifPlaceName(placeData);">
+          Place {{ countPlaces }} : {{ placeData.substring(5) }}
+        </label>
+      </p>
+    </div>
+
+    <!-- Map -->
+    <div>
+      <agm-map [latitude]="latitude" [zoom]="zoom" [longitude]="longitude">
+        <div *ngFor="let marker of places">
+          <agm-marker *ngIf="checkPlace(marker.name)"
+          [latitude]="marker.lat"
+          [longitude]="marker.lng"
+          (markerClick)="clickedMarker(infoWindow)">
+            <agm-info-window #infoWindow>
+              {{ marker.name }}
+            </agm-info-window>
+          </agm-marker>
+      </div>
+    </agm-map>
+    </div>
+
+    <mat-action-row *ngIf="userIsAuthenticated && userId === route.creator">
+      <button mat-button color="warn" (click)="onDelete(route.id)">DELETE</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+</mat-accordion>
+<mat-paginator [length]="totalRoutes" [pageSize]="routesPerPage" [pageSizeOptions]="pageSizeOptions" (page)="onChangedPage($event)"
+  *ngIf="routes.length > 0"></mat-paginator>
+<p class="info-text mat-body-1" *ngIf="routes.length <= 0 && !isLoading">No routes added yet!</p>

@@ -1,0 +1,69 @@
+.header {
+  font-family: cursive;
+  font-weight: bold;
+}
+
+div.a {
+  text-align: center;
+  font-family: cursive;
+  font-weight: bold;
+}
+
+agm-map
+{
+  height: 600px;
+  width: 1000px;
+}
+
+.liked {
+  color: red;
+  font-size: 24px;
+  position: center;
+}
+
+.redHeart {
+  color: red;
+}
+
+.fa {
+  font-size: 50px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.fa:hover {
+  color: red;
+}
+
+mat-button-toggle-group {
+  margin-left: 12px;
+}
+
+.like {
+  color: black
+}
+
+.unlike {
+  color: chartreuse;
+}
+
+.select {
+  font-weight: bold;
+  color: red;
+}
+
+.list-group{
+  max-height: 550px;
+  width: 500px;
+  margin-bottom: 10px;
+  overflow:auto;
+  -webkit-overflow-scrolling: touch;
+  position: absolute;
+  right: 80px;
+
+}
+.list-group-item{
+  height: 150px;
+  width: 475px;
+}
+

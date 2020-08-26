@@ -1,0 +1,147 @@
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<!-- <h3 class="header">Choose your goals of your trip:</h3> -->
+<!-- <mat-checkbox [checked]="Goal_Attractions_Leisure" (change)="Goal_Attractions_Leisure = !Goal_Attractions_Leisure">
+    Attractions & Leisure
+</mat-checkbox>
+<br>
+<mat-checkbox [checked]="Goal_Culture_And_Historical_Places" (change)="Goal_Culture_And_Historical_Places = !Goal_Culture_And_Historical_Places">
+    Culture & Historical Places
+</mat-checkbox>
+<br>
+<mat-checkbox [checked]="Goal_Shopping" (change)="Goal_Shopping = !Goal_Shopping">
+    Shopping
+</mat-checkbox>
+<br>
+<mat-checkbox [checked]="Goal_Night_Life" (change)="Goal_Night_Life = !Goal_Night_Life">
+    Night Life
+</mat-checkbox>
+<br>
+<mat-checkbox [checked]="Goal_Relaxing" (change)="Goal_Relaxing = !Goal_Relaxing">
+    Relaxing
+</mat-checkbox>
+<br>
+<mat-checkbox [checked]="Goal_Sport_And_Extreme" (change)="Goal_Sport_And_Extreme = !Goal_Sport_And_Extreme">
+    Sport & Extreme
+</mat-checkbox>
+<br>
+
+<button mat-raised-button color="warn" type="button" (click)="onClickFindPlace(user)"> Find Me Places! </button>
+<br>
+<span class="select" *ngIf="!placeFindBtnClicked">Please select at least one goal</span> -->
+
+
+<!-- <button mat-raised-button color="warn" type="button" *ngIf="!placeFindBtnClicked" (click)="onClickFindPlace(user)"> Find Me Places! </button> -->
+<button mat-stroked-button class="btn" *ngIf="!placeFindBtnClicked" (click)="onClickFindPlace(user)">Find Me Places!</button>
+
+<div *ngIf="placeFindBtnClicked">
+
+  <div class="goal-button-row">
+    <button mat-stroked-button class="btngoal3" routerLink="/placelist">Attractions & Leisure</button>
+    <button mat-stroked-button class="btngoal1" routerLink="/placelist"><i class="fa fa-futbol-o" aria-hidden="true"></i> Sport & Extreme</button>
+    <button mat-stroked-button class="btngoal2" routerLink="/placelist"><i class="fa fa-glass" aria-hidden="true"></i> Night Life</button>
+    <button mat-stroked-button class="btngoal3" routerLink="/placelist">Culture & Historical Places</button>
+    <button mat-stroked-button class="btngoal1"routerLink="/placelist" >Relaxing</button>
+    <button mat-stroked-button class="btngoal2" routerLink="/placelist"><i class="fa fa-shopping-bag" aria-hidden="true"></i> Shopping</button>
+    <div>
+  <br>
+  <mat-divider></mat-divider>
+
+<!-- ///////////////////////////////////////////////////// -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+</style>
+<br>
+<br>
+<br>
+<!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/> -->
+<div class="container">
+  <div class="row">
+    <div class="col-md-4">
+        <div class="panel panel-primary" id="result_panel">
+           <div class="panel-heading"><h3 class="header">Result List</h3></div>
+             <div class="panel-body">
+                 <ul class="list-group">
+                   <div *ngFor="let place of placesKMEANS">
+                     <li class="list-group-item">
+                      <div id="qr" style="display:inline-block; min-width:5.2cm; height:3.8cm; align: center;vertical-align: middle;" >
+                      <img src="{{place.photo}}"
+                      style="height: 70px;"
+                      style="width: 170px;">
+
+                      </div>
+                      <div style="display:inline-block; vertical-align:top;">
+                        <a class="abutton" (click)="deletePlace(place.id)"><i class="fa fa-trash-o delete" aria-hidden="true"></i></a>
+                        <br>
+                        <strong>{{place.name}}</strong>
+                        <br>
+                        <a class="abutton"  *ngIf="linkPlace(place.name)" href="{{placeurl}}">Link to {{ place.name}}</a>
+                      <br>
+                     {{place.goal}}
+                        <br>
+                        <a class="abutton" *ngIf="!ifUserSaveThisPlace(place.id)" (click)="onSavePlaceClicked(place)" aria-disabled="true"><i class="fa fa-star-o save" aria-hidden="true"></i></a>
+                        <a class="abutton" *ngIf="ifUserSaveThisPlace(place.id)" (click)="onUnSavePlaceClicked(place)"><i class="fa fa-star unsave" aria-hidden="true"></i></a>
+                        <br>
+                        <strong>Likes:</strong> {{place.count_of_likes}}
+                        <br>
+                        <a class="abutton" *ngIf="!checkIfUserLikeThePlace(place.id)" (click)="LikeClicked(place,infoWindow)" aria-disabled="true"><i class="fa fa-thumbs-up like" aria-hidden="true"></i> You didn't like this place yet.</a>
+                        <a class="abutton"  *ngIf="checkIfUserLikeThePlace(place.id)" (click)="UnLikeClicked(place,infoWindow)"><i class="fa fa-thumbs-o-down unlike" aria-hidden="true"></i> You already liked this place!</a>
+                      </div>
+                      </li>
+                   </div>
+                 </ul>
+             </div>
+        </div>
+    </div>
+
+  <!-- //////////////////////////////////////// -->
+  <br>
+  <div class="col-md-4">
+
+  <agm-map [latitude]="lat" [zoom]="zoom" [longitude]="lng">
+    <div *ngFor="let place of placesKMEANS">
+    <agm-marker *ngIf="updateMarkerColorByGoal(place)"
+    [latitude]="place.lat"
+    [longitude]="place.lng"
+    (markerClick)="clickedMarker(infoWindow)"
+    [iconUrl] ="
+    {
+      url: colorurl
+    }"
+    >
+
+    <agm-info-window #infoWindow>
+        Place Name: {{place.name}}
+        <br>
+        Likes : {{place.count_of_likes}}
+        <br>
+        Goal : {{place.goal}}
+        <br>
+        PlaceId : {{place.id}}
+        <br>
+          <a class="abutton" *ngIf="!checkIfUserLikeThePlace(place.id)" (click)="LikeClicked(place,infoWindow)"><i class="fa fa-thumbs-up like" aria-hidden="true"></i>  </a>
+          <a class="abutton"  *ngIf="checkIfUserLikeThePlace(place.id)" (click)="UnLikeClicked(place,infoWindow)"><i class="fa fa-thumbs-o-down unlike" aria-hidden="true"></i></a>
+      </agm-info-window>
+
+    </agm-marker>
+    </div>
+  </agm-map>
+</div>
+
+  </div>
+
+</div>
+</div>
+
+<br>
+<br>
+<button mat-stroked-button class="btn1" (click)="onClickFindPlace(user)">Find Again!</button>
+
